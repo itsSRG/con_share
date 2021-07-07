@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1082592947827",
+    "firebase_url": "https://contacts-share-aa817-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "contacts-share-aa817",
+    "storage_bucket": "contacts-share-aa817.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082592947827:android:2db47df13958eee8db0406",
+        "android_client_info": {
+          "package_name": "com.example.share_contacts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082592947827-i1uoqtlkqpipdm8umniqt427cdee9sqv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.share_contacts",
+            "certificate_hash": "bd54268ec8659b4e19ff0ad7fa7f531eb236eb8c"
+          }
+        },
+        {
+          "client_id": "1082592947827-q90fp812tc9mkffb8uh5gih5vso4b65f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBey5N4MdG6Xv5S6JQahnV1lCnTPYD7HzE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082592947827-q90fp812tc9mkffb8uh5gih5vso4b65f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

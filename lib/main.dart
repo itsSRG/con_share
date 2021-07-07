@@ -4,6 +4,7 @@ import 'select_contacts.dart';
 import "package:http/http.dart" as http;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   // Optional clientId
@@ -14,24 +15,23 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
   ],
 );
 
-void main() async{
-
-  runApp(
-    MaterialApp(
-      title: 'Google Sign In',
-      home: SignInDemo(),
-    ),
-  );
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MaterialApp(
+      title: 'Famtact',
+      theme: ThemeData.dark(),
+      home: SignInDemo()));
 }
 
 class SignInDemo extends StatefulWidget {
   @override
   State createState() => SignInDemoState();
 }
-
+final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
+GoogleSignInAccount? _currentUser;
+String _contactText = '';
 class SignInDemoState extends State<SignInDemo> {
-  GoogleSignInAccount? _currentUser;
-  String _contactText = '';
+
 
   @override
   void initState() {
@@ -40,16 +40,47 @@ class SignInDemoState extends State<SignInDemo> {
       setState(() {
         _currentUser = account;
       });
-      if (_currentUser != null) {
-        _handleGetContact(_currentUser!);
-      }
-      else{
-        print("Hello");
-      }
     });
     _googleSignIn.signInSilently();
   }
 
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder(
+            future: _fbApp,
+            builder: (context, snapshot) {
+              print("HEllooooooooo");
+              if (snapshot.hasError) {
+                print('You Have an error! ${snapshot.error.toString()}');
+              } else if (snapshot.hasData) {
+                return Scaffold(
+                    appBar: AppBar(
+                      title: const Text('Google Sign In'),
+                    ),
+                    body: ConstrainedBox(
+                      constraints: const BoxConstraints.expand(),
+                      child: _buildBody(),
+                    ));
+              }
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }),
+    );
+  }
+}
+
+class _buildBody extends StatefulWidget {
+  // const _buildBody({Key key}) : super(key: key);
+
+  @override
+  __buildBodyState createState() => __buildBodyState();
+}
+
+class __buildBodyState extends State<_buildBody> {
   Future<void> _handleGetContact(GoogleSignInAccount user) async {
     setState(() {
       _contactText = "Loading contact info...";
@@ -82,12 +113,12 @@ class SignInDemoState extends State<SignInDemo> {
   String? _pickFirstNamedContact(Map<String, dynamic> data) {
     final List<dynamic>? connections = data['connections'];
     final Map<String, dynamic>? contact = connections?.firstWhere(
-      (dynamic contact) => contact['names'] != null,
+          (dynamic contact) => contact['names'] != null,
       orElse: () => null,
     );
     if (contact != null) {
       final Map<String, dynamic>? name = contact['names'].firstWhere(
-        (dynamic name) => name['displayName'] != null,
+            (dynamic name) => name['displayName'] != null,
         orElse: () => null,
       );
       if (name != null) {
@@ -107,7 +138,8 @@ class SignInDemoState extends State<SignInDemo> {
 
   Future<void> _handleSignOut() => _googleSignIn.disconnect();
 
-  Widget _buildBody() {
+  @override
+  Widget build(BuildContext context) {
     GoogleSignInAccount? user = _currentUser;
     if (user != null) {
       return Column(
@@ -128,7 +160,9 @@ class SignInDemoState extends State<SignInDemo> {
           ),
           ElevatedButton(
             child: const Text('REFRESH'),
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home())),
+            onPressed: (){
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => Home()));},
           ),
         ],
       );
@@ -144,17 +178,5 @@ class SignInDemoState extends State<SignInDemo> {
         ],
       );
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Google Sign In'),
-        ),
-        body: ConstrainedBox(
-          constraints: const BoxConstraints.expand(),
-          child: _buildBody(),
-        ));
   }
 }

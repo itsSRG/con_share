@@ -146,9 +146,7 @@ class __buildBodyState extends State<_buildBody> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           ListTile(
-            leading: GoogleUserCircleAvatar(
-              identity: user,
-            ),
+            leading: Icon(Icons.person),
             title: Text(user.displayName ?? ''),
             subtitle: Text(user.email),
           ),

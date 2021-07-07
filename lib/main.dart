@@ -62,7 +62,7 @@ class SignInDemoState extends State<SignInDemo> {
                     ),
                     body: ConstrainedBox(
                       constraints: const BoxConstraints.expand(),
-                      child: _buildBody(),
+                      child: BuildBody(),
                     ));
               }
               return Center(
@@ -73,14 +73,14 @@ class SignInDemoState extends State<SignInDemo> {
   }
 }
 
-class _buildBody extends StatefulWidget {
+class BuildBody extends StatefulWidget {
   // const _buildBody({Key key}) : super(key: key);
 
   @override
-  __buildBodyState createState() => __buildBodyState();
+  _BuildBodyState createState() => _BuildBodyState();
 }
 
-class __buildBodyState extends State<_buildBody> {
+class _BuildBodyState extends State<BuildBody> {
   Future<void> _handleGetContact(GoogleSignInAccount user) async {
     setState(() {
       _contactText = "Loading contact info...";

@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:convert' show json;
-import 'select_contacts.dart';
-import "package:http/http.dart" as http;
+// import 'dart:convert' show json;
+import 'group_view.dart';
+// import "package:http/http.dart" as http;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -42,6 +42,7 @@ class SignInDemoState extends State<SignInDemo> {
       });
     });
     _googleSignIn.signInSilently();
+    print(_currentUser);
   }
 
 
@@ -81,52 +82,52 @@ class BuildBody extends StatefulWidget {
 }
 
 class _BuildBodyState extends State<BuildBody> {
-  Future<void> _handleGetContact(GoogleSignInAccount user) async {
-    setState(() {
-      _contactText = "Loading contact info...";
-    });
-    final http.Response response = await http.get(
-      Uri.parse('https://people.googleapis.com/v1/people/me/connections'
-          '?requestMask.includeField=person.names'),
-      headers: await user.authHeaders,
-    );
-    if (response.statusCode != 200) {
-      setState(() {
-        _contactText = "People API gave a ${response.statusCode} "
-            "response. Check logs for details.";
-      });
-      print('People API ${response.statusCode} response: ${response.body}');
-      return;
-    }
-    final Map<String, dynamic> data = json.decode(response.body);
-    final String? namedContact = _pickFirstNamedContact(data);
-    setState(() {
-      if (namedContact != null) {
-        print(data);
-        _contactText = "I see you know $namedContact!";
-      } else {
-        _contactText = "No contacts to display.";
-      }
-    });
-  }
+  // Future<void> _handleGetContact(GoogleSignInAccount user) async {
+  //   setState(() {
+  //     _contactText = "Loading contact info...";
+  //   });
+  //   final http.Response response = await http.get(
+  //     Uri.parse('https://people.googleapis.com/v1/people/me/connections'
+  //         '?requestMask.includeField=person.names'),
+  //     headers: await user.authHeaders,
+  //   );
+  //   if (response.statusCode != 200) {
+  //     setState(() {
+  //       _contactText = "People API gave a ${response.statusCode} "
+  //           "response. Check logs for details.";
+  //     });
+  //     print('People API ${response.statusCode} response: ${response.body}');
+  //     return;
+  //   }
+  //   final Map<String, dynamic> data = json.decode(response.body);
+  //   final String? namedContact = _pickFirstNamedContact(data);
+  //   setState(() {
+  //     if (namedContact != null) {
+  //       print(data);
+  //       _contactText = "I see you know $namedContact!";
+  //     } else {
+  //       _contactText = "No contacts to display.";
+  //     }
+  //   });
+  // }
 
-  String? _pickFirstNamedContact(Map<String, dynamic> data) {
-    final List<dynamic>? connections = data['connections'];
-    final Map<String, dynamic>? contact = connections?.firstWhere(
-          (dynamic contact) => contact['names'] != null,
-      orElse: () => null,
-    );
-    if (contact != null) {
-      final Map<String, dynamic>? name = contact['names'].firstWhere(
-            (dynamic name) => name['displayName'] != null,
-        orElse: () => null,
-      );
-      if (name != null) {
-        return name['displayName'];
-      }
-    }
-    return null;
-  }
+  // String? _pickFirstNamedContact(Map<String, dynamic> data) {
+  //   final List<dynamic>? connections = data['connections'];
+  //   final Map<String, dynamic>? contact = connections?.firstWhere(
+  //         (dynamic contact) => contact['names'] != null,
+  //     orElse: () => null,
+  //   );
+  //   if (contact != null) {
+  //     final Map<String, dynamic>? name = contact['names'].firstWhere(
+  //           (dynamic name) => name['displayName'] != null,
+  //       orElse: () => null,
+  //     );
+  //     if (name != null) {
+  //       return name['displayName'];
+  //     }
+  //   }
+  //   return null;
+  // }
 
   Future<void> _handleSignIn() async {
     try {
@@ -159,8 +160,8 @@ class _BuildBodyState extends State<BuildBody> {
           ElevatedButton(
             child: const Text('REFRESH'),
             onPressed: (){
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => Home()));},
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => GorupView()));
+            }
           ),
         ],
       );

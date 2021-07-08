@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'constants.dart' as cnst;
+
 class HomeReal extends StatefulWidget {
   const HomeReal({Key? key}) : super(key: key);
 
@@ -18,13 +21,56 @@ class _HomeRealState extends State<HomeReal> {
   // }
   Widget build(BuildContext context) {
     final ref = fb.reference();
-    return Container(
-      child: ElevatedButton(
-        child: Text("Click"),
-        onPressed: () {
-          ref.child(grpname).set(cnst.final_val[0].contactName);
-        },
+    var groups;
+    ref.once().then((value) => groups = value.value);
+
+    Future<Map<String, dynamic>> output  = json.decode(groups).cast<Map<String, dynamic>>();
+    return MaterialApp(
+      theme: ThemeData.dark(),
+      home: Scaffold(
+        body: Column(
+          children: [
+            Center(
+              child: Container(
+                margin: EdgeInsets.all(50),
+                decoration: BoxDecoration(shape: BoxShape.circle),
+                child: ElevatedButton(
+                  child: Icon(Icons.refresh),
+                  onPressed: () {
+                    ref.once().then((value) => groups = value.value);
+                  },
+                ),
+              ),
+            ),
+            FutureBuilder(
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  print('You Have an error! ${snapshot.error.toString()}');
+                } 
+                else if (snapshot.hasData) {
+                  print(groups.runtimeType);
+                }
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+              future: output,
+            )
+          ],
+        ),
       ),
     );
   }
 }
+
+// ElevatedButton(
+//         child: Text("Click"),
+//         onPressed: () {
+//           for (int i = 0; i< cnst.final_val.length; i++)
+//           {
+//             ref.child(grpname).child('user').child('contact$i').set(cnst.final_val[i].contactName);
+//             ref.child(grpname).child('user').child('contact$i').child(cnst.final_val[i].contactName).set(cnst.final_val[i].number);
+//           }
+          
+//         },
+//       ),

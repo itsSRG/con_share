@@ -1,4 +1,7 @@
+import 'package:google_sign_in/google_sign_in.dart';
+GoogleSignInAccount? currentUser;
 List<UserContactItem> final_val = [];
+GoogleSignInAccount? _currentUser;
 List<bool>? selected;
 
 class UserContactItem {

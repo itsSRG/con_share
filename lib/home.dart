@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'add_grp.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'constants.dart' as cnst;
@@ -12,19 +12,19 @@ class HomeReal extends StatefulWidget {
 }
 
 class _HomeRealState extends State<HomeReal> {
-  final fb = FirebaseDatabase.instance;
-  final grpname = "Family";
+  
   @override
   // void initState(){
   //   super.initState();
   //   Firebase.initializeApp();
   // }
   Widget build(BuildContext context) {
-    final ref = fb.reference();
-    var groups;
-    ref.once().then((value) => groups = value.value);
+    final fb = FirebaseDatabase.instance;
+    final ref = fb.reference().child('groups');
+    var groups = [];
+    // ref.once().then((value) => groups = value.value);
 
-    Future<Map<String, dynamic>> output  = json.decode(groups).cast<Map<String, dynamic>>();
+    // Future<Map<String, dynamic>> output  = json.decode(groups).cast<Map<String, dynamic>>();
     return MaterialApp(
       theme: ThemeData.dark(),
       home: Scaffold(
@@ -37,26 +37,50 @@ class _HomeRealState extends State<HomeReal> {
                 child: ElevatedButton(
                   child: Icon(Icons.refresh),
                   onPressed: () {
-                    ref.once().then((value) => groups = value.value);
+                    setState(() {
+                      
+                    });
                   },
                 ),
               ),
             ),
             FutureBuilder(
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  print('You Have an error! ${snapshot.error.toString()}');
-                } 
-                else if (snapshot.hasData) {
-                  print(groups.runtimeType);
-                }
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-              future: output,
-            )
+                future: ref.once(),
+                builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    print('You Have an error! ${snapshot.error.toString()}');
+                  } else if (snapshot.hasData) {
+                    groups.clear();
+                    Map<dynamic, dynamic> values = snapshot.data!.value;
+                    values.forEach((key, values) {
+                      groups.add(values as Map);
+                    });
+                    return new ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: groups.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text("Admin: " + groups[index]["admin"].toString()),
+                                Text("Group Name: " +
+                                    groups[index]["group_name"].toString()),
+                              ],
+                            ),
+                          );
+                        });
+                  }
+                  return CircularProgressIndicator();
+                }),
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => AddGroup())).then((value) => setState((){}));
+          },
         ),
       ),
     );

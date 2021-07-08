@@ -1,5 +1,6 @@
 import 'dart:async';
-// import 'dart:convert' show json;
+import 'constants.dart';
+import 'home.dart';
 import 'group_view.dart';
 // import "package:http/http.dart" as http;
 import 'package:flutter/material.dart';
@@ -28,7 +29,6 @@ class SignInDemo extends StatefulWidget {
   State createState() => SignInDemoState();
 }
 final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
-GoogleSignInAccount? _currentUser;
 String _contactText = '';
 class SignInDemoState extends State<SignInDemo> {
 
@@ -38,11 +38,11 @@ class SignInDemoState extends State<SignInDemo> {
     super.initState();
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       setState(() {
-        _currentUser = account;
+        currentUser = account;
       });
     });
     _googleSignIn.signInSilently();
-    print(_currentUser);
+    
   }
 
 
@@ -141,8 +141,9 @@ class _BuildBodyState extends State<BuildBody> {
 
   @override
   Widget build(BuildContext context) {
-    GoogleSignInAccount? user = _currentUser;
+    GoogleSignInAccount? user = currentUser;
     if (user != null) {
+      print('the user id is' + currentUser!.id.toString());
       return Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
@@ -160,7 +161,7 @@ class _BuildBodyState extends State<BuildBody> {
           ElevatedButton(
             child: const Text('REFRESH'),
             onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => GorupView()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeReal()));
             }
           ),
         ],

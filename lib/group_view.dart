@@ -3,7 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:convert';
 
 class GorupView extends StatefulWidget {
-  const GorupView({Key? key}) : super(key: key);
+  final String? grpName;
+  const GorupView({Key? key, this.grpName}) : super(key: key);
 
   @override
   _GorupViewState createState() => _GorupViewState();
@@ -21,11 +22,12 @@ class _GorupViewState extends State<GorupView> {
         title: Text("Groups"),
       ),
       body: FutureBuilder(
-          future: ref.once(),
+          future: ref.orderByChild('group_name').equalTo(widget.grpName).once(),
           builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
             if (snapshot.hasError) {
               print('You Have an error! ${snapshot.error.toString()}');
             } else if (snapshot.hasData) {
+              groups.clear();
               Map<dynamic, dynamic> values = snapshot.data!.value;
               values.forEach((key, values) {
                 groups.add(values as Map);
@@ -35,22 +37,14 @@ class _GorupViewState extends State<GorupView> {
                   itemCount: groups.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Card(
+                        child: ListTile(
+                            title: Center(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("Name: " + groups[index].keys.toString()),
-                          Text("Contact: " +
-                              groups[index][groups[index]
-                                      .keys
-                                      .toString()
-                                      .substring(
-                                          1,
-                                          groups[index].keys.toString().length -
-                                              1)]
-                                  .toString()),
+                        children: [
+                          Text("Name: " + groups[index]['admin'].toString()),
                         ],
                       ),
-                    );
+                    )));
                   });
             }
             return CircularProgressIndicator();
@@ -58,3 +52,13 @@ class _GorupViewState extends State<GorupView> {
     );
   }
 }
+
+                          // Text("Contact: " +
+                          //     groups[index][groups[index]
+                          //             .keys
+                          //             .toString()
+                          //             .substring(
+                          //                 1,
+                          //                 groups[index].keys.toString().length -
+                          //                     1)]
+                          //         .toString()),

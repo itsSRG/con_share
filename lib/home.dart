@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:con_share/group_view.dart';
+
 import 'add_grp.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -12,7 +14,6 @@ class HomeReal extends StatefulWidget {
 }
 
 class _HomeRealState extends State<HomeReal> {
-  
   @override
   // void initState(){
   //   super.initState();
@@ -37,9 +38,7 @@ class _HomeRealState extends State<HomeReal> {
                 child: ElevatedButton(
                   child: Icon(Icons.refresh),
                   onPressed: () {
-                    setState(() {
-                      
-                    });
+                    setState(() {});
                   },
                 ),
               ),
@@ -60,13 +59,16 @@ class _HomeRealState extends State<HomeReal> {
                         itemCount: groups.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text("Admin: " + groups[index]["admin"].toString()),
-                                Text("Group Name: " +
+                            child: ListTile(
+                              title: Center(
+                                child: Text(
                                     groups[index]["group_name"].toString()),
-                              ],
+                              ),
+                              onTap: () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                        builder: (context) => GorupView(grpName : groups[index]["group_name"].toString())));
+                              },
                             ),
                           );
                         });
@@ -79,7 +81,8 @@ class _HomeRealState extends State<HomeReal> {
           child: Icon(Icons.add),
           onPressed: () {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AddGroup())).then((value) => setState((){}));
+                .push(MaterialPageRoute(builder: (context) => AddGroup()))
+                .then((value) => setState(() {}));
           },
         ),
       ),

@@ -11,7 +11,12 @@ Map<String?, String?> group_unique = {}; // stores unique id for a group
 Map<String?, List<String>> user_id = {};
 Map<String?, List<String>> user_email = {};
 
-void initialize() async {
+Future<bool> initialize() async {
+  selected = {};
+  final_val = {};
+  group_unique = {};
+  user_id = {};
+  user_email = {};
   var fb = FirebaseDatabase.instance;
   var ref = fb.reference().child('groups');
   var snapshot = await ref.once();
@@ -47,6 +52,7 @@ void initialize() async {
         print('out of loop 1');
         if (key1.toString() == 'contacts') {
           Map<dynamic, dynamic>.from(value1).forEach((key2, value2) {
+            
             final_val[key]![
                 user_email[key]![user_id[key]!.indexOf(key2.toString())]] = [];
             Map<dynamic, dynamic>.from(value2).forEach((key3, value3) {
@@ -71,6 +77,9 @@ void initialize() async {
   print(user_id);
   print(user_email);
   print(final_val);
+  print(selected);
+  print('Printed Selected');
+  return true;
 }
 
 class UserContactItem {

@@ -38,17 +38,40 @@ class _SelectContactsState extends State<SelectContacts> {
       if (cnst.selected![widget.grpName] == null) {
         cnst.selected![widget.grpName] =
             new List.filled(_userList.length, false);
-        cnst.final_val[widget.grpName] = {};
-          cnst.final_val[widget.grpName]![cnst.currentUser!.email] = [];
         
       }
+      if (cnst.final_val != null)
+      {
+        if (cnst.final_val[cnst.group_unique[widget.grpName]]![cnst.currentUser!.email] == null)
+        {
+          cnst.final_val[cnst.group_unique[widget.grpName]]![cnst.currentUser!.email] = [];
+        }
+        for (int i = 0; i <_userList.length; i++)
+        {
+          for (var j in cnst.final_val[cnst.group_unique[widget.grpName]]![cnst.currentUser!.email]!)
+          {
+            if (_userList[i].contactName == j.contactName && _userList[i].number == j.number)
+            {
+              print('select changed');
+              cnst.selected![widget.grpName]![i] = true;
+            }
+          }
+          
+        }
+      }
     }
-    
   }
 
   Widget theList() {
     if (cnst.selected![widget.grpName] == null) {
-      return Center(child: Column(children: [Container(margin: EdgeInsets.all(20),child: Text('Contacts Permission Is Required To Use The App, Please Enable From Settings')),CircularProgressIndicator()]));
+      return Center(
+          child: Column(children: [
+        Container(
+            margin: EdgeInsets.all(20),
+            child: Text(
+                'Contacts Permission Is Required To Use The App, If Done Please Wait, If Not Please Enable From Settings !')),
+        CircularProgressIndicator()
+      ]));
     } else {
       return ListView.builder(
         itemCount: _userList.length,
@@ -57,19 +80,24 @@ class _SelectContactsState extends State<SelectContacts> {
           return CheckboxListTile(
             value: (cnst.selected![widget.grpName]![contactIndex]),
             onChanged: (bool? check) {
+              print('Atleast check box click detected');
               setState(() {
                 cnst.selected![widget.grpName]![contactIndex] =
                     !cnst.selected![widget.grpName]![contactIndex];
 
                 if (cnst.selected![widget.grpName]![contactIndex] == true) {
-                  cnst.final_val[widget.grpName]![cnst.currentUser!.email]!.add(_userList[contactIndex]);
+                  print('is there a problem here ?');
+                  print(cnst.final_val[cnst.group_unique[widget.grpName]]![cnst.currentUser!.email]!);
+                  cnst.final_val[cnst.group_unique[widget.grpName]]![cnst.currentUser!.email]!
+                      .add(_userList[contactIndex]);
                 } else {
                   cnst.final_val[widget.grpName]!
                       .remove(_userList[contactIndex]);
                 }
 
                 print("--------------------------");
-                for (var i in cnst.final_val[widget.grpName]![cnst.currentUser!.email]!) {
+                for (var i in cnst
+                    .final_val[cnst.group_unique[widget.grpName]]![cnst.currentUser!.email]!) {
                   print(i.contactName);
                 }
                 print("--------------------------");
@@ -112,14 +140,16 @@ class _SelectContactsState extends State<SelectContacts> {
                   print('Group Unique Id');
                   print(cnst.group_unique[widget.grpName]);
                   print('Group Unique Id');
-                  for (var i in cnst.final_val[widget.grpName]![cnst.currentUser!.email]!) {
+                  ref.child('contacts').child(cnst.currentUser!.id).remove();
+                  for (var i in cnst
+                      .final_val[cnst.group_unique[widget.grpName]]![cnst.currentUser!.email]!) {
                     ref
                         .child('contacts')
                         .child(cnst.currentUser!.id)
                         .push()
                         .set({'${i.contactName}': '${i.number}'});
                   }
-
+                  cnst.initialize();
                   Navigator.of(context).pop();
                 },
                 child: Text(

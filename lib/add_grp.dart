@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:con_share/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'constants.dart' as cnst;
 
 class AddGroup extends StatelessWidget {
   const AddGroup({Key? key}) : super(key: key);
@@ -42,6 +43,7 @@ class AddGroup extends StatelessWidget {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(onError)));
               });
+              cnst.initialize();
               Navigator.of(context).pop();
             },
           )

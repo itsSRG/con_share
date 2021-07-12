@@ -15,14 +15,15 @@ class HomeReal extends StatefulWidget {
 
 class _HomeRealState extends State<HomeReal> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    cnst.initialize();
+    // cnst.initialize().then((value) => setState((){}));
   }
   Widget build(BuildContext context) {
-    final fb = FirebaseDatabase.instance;
-    final ref = fb.reference().child('groups');
-    var groups = [];
+    // final fb = FirebaseDatabase.instance;
+    // final ref = fb.reference().child('groups');
+    List<String> groups = [];
+    List<String> groups_unique_string = [];
     // ref.once().then((value) => groups = value.value);
 
     // Future<Map<String, dynamic>> output  = json.decode(groups).cast<Map<String, dynamic>>();
@@ -44,17 +45,17 @@ class _HomeRealState extends State<HomeReal> {
               ),
             ),
             FutureBuilder(
-                future: ref.once(),
-                builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
+                future: cnst.initialize(),
+                builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     print('You Have an error! ${snapshot.error.toString()}');
                   } else if (snapshot.hasData) {
-                    groups.clear();
-                    if(snapshot.data!.value == null)
-                      return Text('No Group Found, Please Add one !');
-                    Map<dynamic, dynamic> values = snapshot.data!.value;
-                    values.forEach((key, values) {
-                      groups.add(values as Map);
+                    
+                    Map<dynamic,dynamic>.from(cnst.group_unique).forEach((key, value) {
+                      if (cnst.user_email[value]!.contains(cnst.currentUser!.email))
+                      {
+                        groups.add(key);
+                      }
                     });
                     return new ListView.builder(
                         shrinkWrap: true,
@@ -64,12 +65,12 @@ class _HomeRealState extends State<HomeReal> {
                             child: ListTile(
                               title: Center(
                                 child: Text(
-                                    groups[index]["group_name"].toString()),
+                                    groups[index]),
                               ),
                               onTap: () {
                                 Navigator.of(context)
                                     .push(MaterialPageRoute(
-                                        builder: (context) => GorupView(grpName : groups[index]["group_name"].toString())));
+                                        builder: (context) => GorupView(grpName : groups[index].toString())));
                               },
                             ),
                           );

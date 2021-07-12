@@ -90,10 +90,10 @@ class _ContactViewState extends State<ContactView> {
               Navigator.of(context)
                   .push(MaterialPageRoute(
                       builder: (context) =>
-                          SelectContacts(grpName: widget.grpName)))
-                  .then((_) async {
-                await cnst.initialize().then((value) => setState(() {}));
-              });
+                          SelectContacts(grpName: widget.grpName)));
+              //     .then((_) async {
+              //   await cnst.initialize().then((value) => setState(() {}));
+              // });
             },
           ),
         ));

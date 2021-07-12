@@ -37,6 +37,10 @@ Future<bool> initialize() async {
               print(key3);
               print(value3);
               print('loop 1');
+              if(key3 == 'none' && value3 == currentUser!.email)
+              {
+                ref.child(key).child('users').child(key2).set({currentUser!.id : currentUser!.email});
+              }
               user_id[key]!.add(key3.toString());
               user_email[key]!.add(value3.toString());
             });

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:con_share/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -8,7 +10,7 @@ class AddGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fb = FirebaseDatabase.instance;
-    final ref = fb.reference().child('groups');
+    final ref = fb.reference().child('groups').push();
     final myController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
@@ -25,8 +27,15 @@ class AddGroup extends StatelessWidget {
           ElevatedButton(
             child: Text('Submit'),
             onPressed: () {
-              ref.push().set({'group_name': myController.text,
-              'admin': currentUser!.email.toString()}).then((_) {
+              print('I start here');
+              group_unique[myController.text] = ref.key;
+              print(ref.key);
+              print(myController.text);
+              print(group_unique[myController.text]);
+              print('I end here');
+              ref.set({'group_name': myController.text});
+              
+              ref.child('users').push().set({'${currentUser!.id}' : '${currentUser!.email}'}).then((_) {
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Successfully Added')));
               }).catchError((onError) {

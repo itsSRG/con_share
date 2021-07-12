@@ -15,10 +15,10 @@ class HomeReal extends StatefulWidget {
 
 class _HomeRealState extends State<HomeReal> {
   @override
-  // void initState(){
-  //   super.initState();
-  //   Firebase.initializeApp();
-  // }
+  void initState(){
+    super.initState();
+    cnst.initialize();
+  }
   Widget build(BuildContext context) {
     final fb = FirebaseDatabase.instance;
     final ref = fb.reference().child('groups');
@@ -50,6 +50,8 @@ class _HomeRealState extends State<HomeReal> {
                     print('You Have an error! ${snapshot.error.toString()}');
                   } else if (snapshot.hasData) {
                     groups.clear();
+                    if(snapshot.data!.value == null)
+                      return Text('No Group Found, Please Add one !');
                     Map<dynamic, dynamic> values = snapshot.data!.value;
                     values.forEach((key, values) {
                       groups.add(values as Map);

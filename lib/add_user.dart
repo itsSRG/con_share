@@ -20,19 +20,15 @@ class AddUser extends StatelessWidget {
         children: [
           Center(
             child: TextField(
+              textAlign: TextAlign.center,
               controller: myController,
               decoration: InputDecoration(hintText: 'Enter User Gmail id'),
             ),
           ),
+          SizedBox(height: 20,),
           ElevatedButton(
             child: Text('Submit'),
             onPressed: () {
-              print('I start here');
-              print(ref.key);
-              print(myController.text);
-              print(cnst.group_unique[myController.text]);
-              print('I end here');
-
               ref.child('users').push().set({'none': '${myController.text}'});
               Navigator.of(context).pop();
             },

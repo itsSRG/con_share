@@ -11,6 +11,7 @@ Map<String?, String?> group_unique = {}; // stores unique id for a group
 Map<String?, List<String>> user_id = {};
 Map<String?, List<String>> user_email = {};
 
+
 Future<bool> initialize() async {
   selected = {};
   final_val = {};
@@ -20,7 +21,9 @@ Future<bool> initialize() async {
   var fb = FirebaseDatabase.instance;
   var ref = fb.reference().child('groups');
   var snapshot = await ref.once();
+  print('*******************************Printing everything in database*****************************************\n\n');
   print(snapshot.value);
+  print('\n\n*******************************Printing everything in database*****************************************');
   if (snapshot.value != null) {
     Map<dynamic, dynamic>.from(snapshot.value).forEach((key, value) {
       user_id[key] = [];
@@ -33,10 +36,6 @@ Future<bool> initialize() async {
         if (key1.toString() == 'users') {
           Map<dynamic, dynamic>.from(value1).forEach((key2, value2) {
             Map<dynamic, dynamic>.from(value2).forEach((key3, value3) {
-              print('loop 1');
-              print(key3);
-              print(value3);
-              print('loop 1');
               if(key3 == 'none' && value3 == currentUser!.email)
               {
                 ref.child(key).child('users').child(key2).set({currentUser!.id : currentUser!.email});
@@ -50,21 +49,12 @@ Future<bool> initialize() async {
     });
     Map<dynamic, dynamic>.from(snapshot.value).forEach((key, value) {
       Map<dynamic, dynamic>.from(value).forEach((key1, value1) {
-        print('out of loop 1');
-        print(user_id);
-        print(user_email);
-        print('out of loop 1');
         if (key1.toString() == 'contacts') {
           Map<dynamic, dynamic>.from(value1).forEach((key2, value2) {
             
             final_val[key]![
                 user_email[key]![user_id[key]!.indexOf(key2.toString())]] = [];
             Map<dynamic, dynamic>.from(value2).forEach((key3, value3) {
-              print('value3');
-              print(key2 == currentUser!.id);
-              print(key);
-              print(user_id);
-              print(user_email[key]![user_id[key]!.indexOf(key2.toString())]);
               Map<dynamic, dynamic>.from(value3).forEach((key4, value4) {
                 final_val[key]![user_email[key]![
                         user_id[key]!.indexOf(key2.toString())]]!
@@ -76,13 +66,18 @@ Future<bool> initialize() async {
       });
     });
   }
-
+  print('\n\nAll constants.dart print statements start\n\n');
+  print('\n\ngroup_unique :\n\n');
   print(group_unique);
+  print('\n\nuser_id :\n\n');
   print(user_id);
+  print('\n\nuser_email :\n\n');
   print(user_email);
+  print('\n\nfinal_val :\n\n');
   print(final_val);
+  print('\n\nselected :\n\n');
   print(selected);
-  print('Printed Selected');
+  print('\n\nAll constants.dart print statements end\n\n');
   return true;
 }
 

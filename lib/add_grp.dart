@@ -21,19 +21,15 @@ class AddGroup extends StatelessWidget {
         children: [
           Center(
             child: TextField(
+              textAlign: TextAlign.center,
               controller: myController,
               decoration: InputDecoration(hintText: 'Enter Group Name'),
             ),
           ),
+          SizedBox(height: 20,),
           ElevatedButton(
             child: Text('Submit'),
             onPressed: () {
-              print('I start here');
-              group_unique[myController.text] = ref.key;
-              print(ref.key);
-              print(myController.text);
-              print(group_unique[myController.text]);
-              print('I end here');
               ref.set({'group_name': myController.text});
               
               ref.child('users').push().set({'${currentUser!.id}' : '${currentUser!.email}'}).then((_) {

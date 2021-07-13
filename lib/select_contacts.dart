@@ -3,7 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'constants.dart' as cnst;
 import 'package:firebase_database/firebase_database.dart';
-import 'home.dart';
+import 'home_backup.dart';
 
 class SelectContacts extends StatefulWidget {
   final String? grpName;
@@ -51,7 +51,6 @@ class _SelectContactsState extends State<SelectContacts> {
               cnst.currentUser!.email]!) {
             if (_userList[i].contactName == j.contactName &&
                 _userList[i].number == j.number) {
-              print('select changed');
               cnst.selected![widget.grpName]![i] = true;
             }
           }
@@ -67,7 +66,7 @@ class _SelectContactsState extends State<SelectContacts> {
         Container(
             margin: EdgeInsets.all(20),
             child: Text(
-                'Contacts Permission Is Required To Use The App, If Done Please Wait, If Not Please Enable From Settings !')),
+                'Contacts Permission Is Required To Use The App, If Done Please Wait, If Not Please Enable From Settings !',textAlign: TextAlign.center,)),
         CircularProgressIndicator()
       ]));
     } else {
@@ -78,13 +77,9 @@ class _SelectContactsState extends State<SelectContacts> {
           return CheckboxListTile(
             value: (cnst.selected![widget.grpName]![contactIndex]),
             onChanged: (bool? check) {
-              print('Atleast check box click detected');
               setState(() {
                 if (cnst.selected![widget.grpName]![contactIndex] == false) {
                   cnst.selected![widget.grpName]![contactIndex] = true;
-                  print('is there a problem here ?');
-                  print(cnst.final_val[cnst.group_unique[widget.grpName]]![
-                      cnst.currentUser!.email]!);
                   cnst.final_val[cnst.group_unique[widget.grpName]]![
                           cnst.currentUser!.email]!
                       .add(_userList[contactIndex]);
@@ -137,7 +132,6 @@ class _SelectContactsState extends State<SelectContacts> {
     super.initState();
     requestAnswer().then((result) {
       setState(() {
-        print("Hello");
       });
     });
   }
@@ -158,9 +152,6 @@ class _SelectContactsState extends State<SelectContacts> {
             child: Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  print('Group Unique Id');
-                  print(cnst.group_unique[widget.grpName]);
-                  print('Group Unique Id');
                   ref.child('contacts').child(cnst.currentUser!.id).remove();
                   for (var i
                       in cnst.final_val[cnst.group_unique[widget.grpName]]![
@@ -172,7 +163,6 @@ class _SelectContactsState extends State<SelectContacts> {
                         .set({'${i.contactName}': '${i.number}'});
                   }
                   cnst.initialize();
-                  print('initialization from select done');
                   Navigator.of(context).pop();
                 },
                 child: Text(

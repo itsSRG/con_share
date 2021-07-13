@@ -4,14 +4,9 @@ import 'constants.dart' as cnst;
 import 'package:flutter/services.dart';
 
 class ContactView extends StatefulWidget {
-  final List<cnst.UserContactItem>? contacts;
   final String user_email;
   final String grpName;
-  const ContactView(
-      {Key? key,
-      this.contacts,
-      required this.user_email,
-      required this.grpName})
+  const ContactView({Key? key, required this.user_email, required this.grpName})
       : super(key: key);
 
   @override
@@ -21,33 +16,39 @@ class ContactView extends StatefulWidget {
 class _ContactViewState extends State<ContactView> {
   @override
   Widget build(BuildContext context) {
-    print('The current user is : ');
-    print(widget.user_email);
-    print(cnst.currentUser!.email);
-    print('Time');
-    if (widget.contacts == null) {
+    if (cnst.final_val[cnst.group_unique[widget.grpName]]![widget.user_email] ==
+        null) {
       return Scaffold(
           appBar: AppBar(
             title: Text('Contacts'),
           ),
-          body: Container(
-            child: Text('No Contacts By This User'),
-          ),
+          body: Column(children: [
+            ElevatedButton(
+              child: Icon(Icons.refresh),
+              onPressed: () async {
+                await cnst.initialize().then((value) => setState(() {}));
+              },
+            ),
+            SizedBox(
+              height: 200,
+            ),
+            Container(
+              padding: EdgeInsets.all(20),
+              child: Center(child: Text('No Contacts By This User')),
+            ),
+          ]),
           floatingActionButton: new Visibility(
             visible:
                 widget.user_email == cnst.currentUser!.email ? true : false,
             child: FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () {
-                print('view contact grp_name is :');
-                print(widget.grpName);
-                print('view contact grp_name is :');
                 Navigator.of(context)
                     .push(MaterialPageRoute(
                         builder: (context) =>
                             SelectContacts(grpName: widget.grpName)))
                     .then((_) async {
-                  Navigator.of(context).pop();;
+                  Navigator.of(context).pop();
                 });
               },
             ),
@@ -58,41 +59,58 @@ class _ContactViewState extends State<ContactView> {
           title: Text('Contacts'),
         ),
         body: Container(
-            child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: widget.contacts!.length,
-                itemBuilder: (BuildContext context, int count) {
-                  if (widget.contacts!.length == 0) {
-                    return Container(
-                        child: Align(
-                      child: Text('No Contacts Shared By This User !'),
-                      alignment: Alignment.center,
-                    ));
-                  }
-                  return ListTile(
-                    title: Text(widget.contacts![count].contactName),
-                    subtitle: Text(widget.contacts![count].number),
-                    onTap: () {
-                      Clipboard.setData(
-                          ClipboardData(text: widget.contacts![count].number));
-                    },
-                  );
-                })),
+            child: RefreshIndicator(
+          onRefresh: () async {
+            await cnst.initialize().then((value) => setState(() {}));
+          },
+          child: ListView.builder(
+              padding: EdgeInsets.all(20),
+              physics: AlwaysScrollableScrollPhysics(),
+              itemCount: cnst
+                  .final_val[cnst.group_unique[widget.grpName]]![
+                      widget.user_email]!
+                  .length,
+              itemBuilder: (BuildContext context, int count) {
+                if (cnst
+                        .final_val[cnst.group_unique[widget.grpName]]![
+                            widget.user_email]!
+                        .length ==
+                    0) {
+                  return Container(
+                      child: Align(
+                    child: Text('No Contacts Shared By This User !'),
+                    alignment: Alignment.center,
+                  ));
+                }
+                return ListTile(
+                  title: Text(cnst
+                      .final_val[cnst.group_unique[widget.grpName]]![
+                          widget.user_email]![count]
+                      .contactName),
+                  subtitle: Text(cnst
+                      .final_val[cnst.group_unique[widget.grpName]]![
+                          widget.user_email]![count]
+                      .number),
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(
+                        text: cnst
+                            .final_val[cnst.group_unique[widget.grpName]]![
+                                widget.user_email]![count]
+                            .number));
+                  },
+                );
+              }),
+        )),
         floatingActionButton: new Visibility(
           visible: widget.user_email == cnst.currentUser!.email ? true : false,
           child: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {
-              print('view contact grp_name is :');
-              print(widget.grpName);
-              print('view contact grp_name is :');
               Navigator.of(context)
                   .push(MaterialPageRoute(
                       builder: (context) =>
                           SelectContacts(grpName: widget.grpName)))
                   .then((_) {
-                // await cnst.initialize().then((value) => setState(() {}));
-                // print('After pop set state is called');
                 Navigator.of(context).pop();
               });
             },

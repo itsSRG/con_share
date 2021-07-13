@@ -1,75 +1,60 @@
 import 'dart:async';
-import 'constants.dart';
-import 'home.dart';
-import 'group_view.dart';
-// import "package:http/http.dart" as http;
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:con_share/group_view.dart';
+import 'add_grp.dart';
+import 'constants.dart' as cnst;
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   // Optional clientId
   // clientId: '479882132969-9i9aqik3jfjd7qhci1nqf0bm2g71rm1u.apps.googleusercontent.com',
   scopes: <String>[
     'email',
-    'https://www.googleapis.com/auth/contacts.readonly',
   ],
 );
 
-Future<void> main() async{
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
-      title: 'Famtact',
-      theme: ThemeData.dark(),
-      home: SignInDemo()));
+      title: 'Famtact', theme: ThemeData.dark(), home: SignInDemo()));
 }
 
 class SignInDemo extends StatefulWidget {
   @override
   State createState() => SignInDemoState();
 }
+
 final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
 String _contactText = '';
+
 class SignInDemoState extends State<SignInDemo> {
-
-
   @override
   void initState() {
     super.initState();
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       setState(() {
-        currentUser = account;
+        cnst.currentUser = account;
       });
     });
     _googleSignIn.signInSilently();
-    
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-            future: _fbApp,
-            builder: (context, snapshot) {
-              print("HEllooooooooo");
-              if (snapshot.hasError) {
-                print('You Have an error! ${snapshot.error.toString()}');
-              } else if (snapshot.hasData) {
-                return Scaffold(
-                    appBar: AppBar(
-                      title: const Text('Google Sign In'),
-                    ),
-                    body: ConstrainedBox(
-                      constraints: const BoxConstraints.expand(),
-                      child: BuildBody(),
-                    ));
-              }
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }),
+          future: _fbApp,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print('You Have an error! ${snapshot.error.toString()}');
+            } else if (snapshot.hasData) {
+              return BuildBody();
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
     );
   }
 }
@@ -82,53 +67,6 @@ class BuildBody extends StatefulWidget {
 }
 
 class _BuildBodyState extends State<BuildBody> {
-  // Future<void> _handleGetContact(GoogleSignInAccount user) async {
-  //   setState(() {
-  //     _contactText = "Loading contact info...";
-  //   });
-  //   final http.Response response = await http.get(
-  //     Uri.parse('https://people.googleapis.com/v1/people/me/connections'
-  //         '?requestMask.includeField=person.names'),
-  //     headers: await user.authHeaders,
-  //   );
-  //   if (response.statusCode != 200) {
-  //     setState(() {
-  //       _contactText = "People API gave a ${response.statusCode} "
-  //           "response. Check logs for details.";
-  //     });
-  //     print('People API ${response.statusCode} response: ${response.body}');
-  //     return;
-  //   }
-  //   final Map<String, dynamic> data = json.decode(response.body);
-  //   final String? namedContact = _pickFirstNamedContact(data);
-  //   setState(() {
-  //     if (namedContact != null) {
-  //       print(data);
-  //       _contactText = "I see you know $namedContact!";
-  //     } else {
-  //       _contactText = "No contacts to display.";
-  //     }
-  //   });
-  // }
-
-  // String? _pickFirstNamedContact(Map<String, dynamic> data) {
-  //   final List<dynamic>? connections = data['connections'];
-  //   final Map<String, dynamic>? contact = connections?.firstWhere(
-  //         (dynamic contact) => contact['names'] != null,
-  //     orElse: () => null,
-  //   );
-  //   if (contact != null) {
-  //     final Map<String, dynamic>? name = contact['names'].firstWhere(
-  //           (dynamic name) => name['displayName'] != null,
-  //       orElse: () => null,
-  //     );
-  //     if (name != null) {
-  //       return name['displayName'];
-  //     }
-  //   }
-  //   return null;
-  // }
-
   Future<void> _handleSignIn() async {
     try {
       await _googleSignIn.signIn();
@@ -141,42 +79,180 @@ class _BuildBodyState extends State<BuildBody> {
 
   @override
   Widget build(BuildContext context) {
-    GoogleSignInAccount? user = currentUser;
+    List<String> groups = [];
+    List<String> groups_unique_string = [];
+    GoogleSignInAccount? user = cnst.currentUser;
     if (user != null) {
-      print('the user id is' + currentUser!.id.toString());
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.person),
-            title: Text(user.displayName ?? ''),
-            subtitle: Text(user.email),
-          ),
-          const Text("Signed in successfully."),
-          Text(_contactText),
-          ElevatedButton(
-            child: const Text('SIGN OUT'),
-            onPressed: _handleSignOut,
-          ),
-          ElevatedButton(
-            child: const Text('REFRESH'),
-            onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeReal()));
-            }
-          ),
-        ],
+      return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('All Groups'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () {
+                _handleSignOut();
+              },
+            )
+          ],
+        ),
+        body: FutureBuilder(
+            future: cnst.initialize(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                print('You Have an error! ${snapshot.error.toString()}');
+              } else if (snapshot.hasData) {
+                Map<dynamic, dynamic>.from(cnst.group_unique)
+                    .forEach((key, value) {
+                  if (cnst.user_email[value]!
+                      .contains(cnst.currentUser!.email)) {
+                    groups.add(key);
+                  }
+                });
+                return groups.length == 0
+                    ? Column(
+                        children: [
+                            ElevatedButton(
+                              child: Icon(Icons.refresh),
+                              onPressed: () async {
+                                await cnst
+                                    .initialize()
+                                    .then((value) => setState(() {}));
+                              },
+                            ),
+                            SizedBox(height: 200,),
+                            Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                  'No Groups Available ! Please Add A Group 😊',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 24),
+                                ),
+                              ),
+                            ),
+                          ])
+                    : Column(
+                        children: [
+                            ElevatedButton(
+                              child: Icon(Icons.refresh),
+                              onPressed: () async {
+                                await cnst
+                                    .initialize()
+                                    .then((value) => setState(() {}));
+                              },
+                            ),
+                            SizedBox(height: 200,), new ListView.builder(
+                            padding: EdgeInsets.all(20),
+                            shrinkWrap: true,
+                            itemCount: groups.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Card(
+                                child: ListTile(
+                                  title: Center(
+                                    child: Text(groups[index]),
+                                  ),
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => GorupView(
+                                                grpName:
+                                                    groups[index].toString())));
+                                  },
+                                ),
+                              );
+                            }),]
+                      );
+              }
+              return CircularProgressIndicator();
+            }),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => AddGroup()))
+                .then((value) => setState(() {}));
+          },
+        ),
       );
     } else {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          const Text("You are not currently signed in."),
-          ElevatedButton(
-            child: const Text('SIGN IN'),
-            onPressed: _handleSignIn,
-          ),
-        ],
+      return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text('Sharetact'),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () {
+                _handleSignOut();
+              },
+            )
+          ],
+        ),
+        body: Center(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                const Text(
+                  "You Are Not Currently Signed In.\n\n Please Sign In 😊",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20),
+                ),
+                OutlinedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.white),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                    ),
+                  ),
+                  onPressed: () async {
+                    _handleSignIn();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Image(
+                          image: AssetImage("assets/google_logo.png"),
+                          height: 35.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Text(
+                            'Sign in with Google',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ]),
+        ),
       );
     }
   }
 }
+
+// Scaffold(
+//                   appBar: AppBar(
+//                     title: Center(child: const Text('Sharetact')),
+//                     actions: [
+//                       IconButton(
+//                         icon: Icon(Icons.logout),
+//                         onPressed: () {},
+//                       )
+//                     ],
+//                   ),
+//                   body: ConstrainedBox(
+//                     constraints: const BoxConstraints.expand(),
+//                     child: BuildBody(),
+//                   ));

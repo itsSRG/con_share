@@ -1,6 +1,5 @@
 import 'package:con_share/add_user.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'view_contact.dart';
 import 'add_user.dart';
 import 'constants.dart' as cnst;
@@ -20,39 +19,34 @@ class _GorupViewState extends State<GorupView> {
         appBar: AppBar(
           title: Text(widget.grpName.toString()),
         ),
-        body: ListView.builder(
-            shrinkWrap: true,
-            itemCount:
-                cnst.user_email[cnst.group_unique[widget.grpName]]!.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Card(
-                  child: ListTile(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(
-                          builder: (context) => ContactView(
-                              grpName: widget.grpName,
-                              contacts: cnst.final_val[
-                                  cnst.group_unique[widget.grpName]]![cnst
-                                      .user_email[
-                                  cnst.group_unique[widget.grpName]]![index]],
-                              user_email: cnst.user_email[
-                                  cnst.group_unique[widget.grpName]]![index])))
-                      .then((_) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Successfully Modified Contacts !')));
-                  }).catchError((onError) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(onError)));
-                  });
-                },
-                title: Center(
-                  child: Text("Name: " +
-                      cnst.user_email[cnst.group_unique[widget.grpName]]![index]
-                          .toString()),
-                ),
-              ));
-            }),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await cnst.initialize().then((value) => setState(() {}));
+          },
+          child: ListView.builder(
+                  padding: EdgeInsets.all(20),
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: cnst
+                      .user_email[cnst.group_unique[widget.grpName]]!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                        child: ListTile(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ContactView(
+                                grpName: widget.grpName,
+                                user_email: cnst.user_email[cnst
+                                    .group_unique[widget.grpName]]![index])));
+                      },
+                      title: Center(
+                        child: Text(
+                            cnst.user_email[cnst.group_unique[widget.grpName]]![
+                                    index]
+                                .toString()),
+                      ),
+                    ));
+                  }),
+        ),
         floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
             onPressed: () {

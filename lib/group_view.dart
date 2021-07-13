@@ -28,15 +28,23 @@ class _GorupViewState extends State<GorupView> {
               return Card(
                   child: ListTile(
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ContactView(
-                          grpName: widget.grpName,
-                          contacts: cnst.final_val[
-                                  cnst.group_unique[widget.grpName]]![
-                              cnst.user_email[
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(
+                          builder: (context) => ContactView(
+                              grpName: widget.grpName,
+                              contacts: cnst.final_val[
+                                  cnst.group_unique[widget.grpName]]![cnst
+                                      .user_email[
                                   cnst.group_unique[widget.grpName]]![index]],
-                          user_email: cnst.user_email[
-                              cnst.group_unique[widget.grpName]]![index])));
+                              user_email: cnst.user_email[
+                                  cnst.group_unique[widget.grpName]]![index])))
+                      .then((_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Successfully Modified Contacts !')));
+                  }).catchError((onError) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(onError)));
+                  });
                 },
                 title: Center(
                   child: Text("Name: " +
@@ -53,10 +61,15 @@ class _GorupViewState extends State<GorupView> {
                       builder: (context) => AddUser(grpName: widget.grpName)))
                   .then((_) async {
                 await cnst.initialize().then((value) => setState(() {}));
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Successfully Added')));
               });
             }));
   }
 }
+
+
+                
 
                           // Text("Contact: " +
                           //     groups[index][groups[index]

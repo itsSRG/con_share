@@ -20,7 +20,6 @@ class ContactView extends StatefulWidget {
 
 class _ContactViewState extends State<ContactView> {
   @override
-
   Widget build(BuildContext context) {
     print('The current user is : ');
     print(widget.user_email);
@@ -48,8 +47,8 @@ class _ContactViewState extends State<ContactView> {
                         builder: (context) =>
                             SelectContacts(grpName: widget.grpName)))
                     .then((_) async {
-                await cnst.initialize().then((value) => setState(() {}));
-              });
+                  Navigator.of(context).pop();;
+                });
               },
             ),
           ));
@@ -90,10 +89,12 @@ class _ContactViewState extends State<ContactView> {
               Navigator.of(context)
                   .push(MaterialPageRoute(
                       builder: (context) =>
-                          SelectContacts(grpName: widget.grpName)));
-              //     .then((_) async {
-              //   await cnst.initialize().then((value) => setState(() {}));
-              // });
+                          SelectContacts(grpName: widget.grpName)))
+                  .then((_) {
+                // await cnst.initialize().then((value) => setState(() {}));
+                // print('After pop set state is called');
+                Navigator.of(context).pop();
+              });
             },
           ),
         ));

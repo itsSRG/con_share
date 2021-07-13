@@ -91,7 +91,7 @@ class _SelectContactsState extends State<SelectContacts> {
                 } 
                 else {
                   cnst.selected![widget.grpName]![contactIndex] = false;
-                  for (int i = 0; i < _userList.length; i++) {
+
                     for (int j = 0;
                         j <
                             cnst
@@ -99,12 +99,12 @@ class _SelectContactsState extends State<SelectContacts> {
                                     cnst.currentUser!.email]!
                                 .length;
                         j++) {
-                      if (_userList[i].contactName ==
+                      if (_userList[contactIndex].contactName ==
                               cnst
                                   .final_val[cnst.group_unique[widget
                                       .grpName]]![cnst.currentUser!.email]![j]
                                   .contactName &&
-                          _userList[i].number ==
+                          _userList[contactIndex].number ==
                               cnst
                                   .final_val[cnst.group_unique[widget
                                       .grpName]]![cnst.currentUser!.email]![j]
@@ -114,8 +114,6 @@ class _SelectContactsState extends State<SelectContacts> {
                             .removeAt(j);
                       }
                     }
-                  }
-                  
                 }
 
                 print("--------------------------");
@@ -178,7 +176,7 @@ class _SelectContactsState extends State<SelectContacts> {
                   Navigator.of(context).pop();
                 },
                 child: Text(
-                  "Add selected",
+                  "Modify Selected Contacts",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20),
                 ),

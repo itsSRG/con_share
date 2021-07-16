@@ -3,7 +3,7 @@
 #### Description:
 
 
-##ShareTact Is A Contact Sharing App. Create Groups With People, Share Contacts With Them !
+## ShareTact Is A Contact Sharing App. Create Groups With People, Share Contacts With Them !
 
 ### Framework Used : Flutter
 ### Programming Language : Dart

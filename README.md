@@ -1,5 +1,5 @@
 # ShareTact
-#### Video Demo:  <URL HERE>
+#### Video Demo:  https://youtu.be/Caav4uObEw4
 #### Description:
 
 
@@ -34,6 +34,6 @@
      also help them fetch easily when needed.
 
    - Keep Other Group Members Updated, Instantly, Easily !
-     - you can simply update the contact list for a group and add, remove contacts that you share with that group,
+     - You can simply update the contact list for a group and add, remove contacts that you share with that group,
      thus the next time you go on a trip with your friends, just update your family group with the contact of people travelling with you !
 

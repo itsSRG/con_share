@@ -1,3 +1,7 @@
+// The project was earlier named con_share, but the final app is named ShareTact
+// google-services.json file is confidential, thus removed from android/app, 
+// thus needs to be downloaded while setting up your firebase project
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,8 +11,6 @@ import 'add_grp.dart';
 import 'constants.dart' as cnst;
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
-  // Optional clientId
-  // clientId: '479882132969-9i9aqik3jfjd7qhci1nqf0bm2g71rm1u.apps.googleusercontent.com',
   scopes: <String>[
     'email',
   ],
@@ -241,18 +243,3 @@ class _BuildBodyState extends State<BuildBody> {
     }
   }
 }
-
-// Scaffold(
-//                   appBar: AppBar(
-//                     title: Center(child: const Text('Sharetact')),
-//                     actions: [
-//                       IconButton(
-//                         icon: Icon(Icons.logout),
-//                         onPressed: () {},
-//                       )
-//                     ],
-//                   ),
-//                   body: ConstrainedBox(
-//                     constraints: const BoxConstraints.expand(),
-//                     child: BuildBody(),
-//                   ));

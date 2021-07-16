@@ -1,16 +1,48 @@
-# con_share
+# ShareTact
+#### Video Demo:  https://youtu.be/Caav4uObEw4
+#### Description:
 
-A new Flutter project.
 
-## Getting Started
+## ShareTact Is A Contact Sharing App. Create Groups With People, Share Contacts With Them !
 
-This project is a starting point for a Flutter application.
+## Technical Details:
+### - Framework Used : Flutter
+### - Programming Language : Dart
+### - Database : Firebase Realtime Database (A NoSQL Database)
+### - User Authentication : Google Sign - In
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+> The app was designed to make contact sharing easier. Be it your family or your colleagues,
+> create context specific groups, and share them with all your group members !
+
+
+
+## Features :
+   - Create various groups, add people to them.
+
+   - Each group member can share contacts will all others
+
+   - If you add/remove contacts, changes visible to all the group members
+
+   - Easily copy contact information with just a tap.
+
+   - Dark Mode For A Cool Look :sunglasses:
+
+   - Google Sign-In For Easy And Secure Login
+
+   - Fast NoSQL Database (Firebase Realtime Database)
+
+
+
+
+## Advantages Of Using ShareTact Over Conventional Methods To Share Contacts
+
+   - Determine Context Of Contacts With Group Titles:
+     - If sharing contact with family, colleagues, friends, keep them seperate. Grouping contacts will
+     also help them fetch easily when needed.
+
+   - Keep Other Group Members Updated, Instantly, Easily !
+     - You can simply update the contact list for a group and add, remove contacts that you share with that group,
+     thus the next time you go on a trip with your friends, just update your family group with the contact of people travelling with you !
+

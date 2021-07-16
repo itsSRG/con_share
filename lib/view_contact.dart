@@ -97,6 +97,8 @@ class _ContactViewState extends State<ContactView> {
                             .final_val[cnst.group_unique[widget.grpName]]![
                                 widget.user_email]![count]
                             .number));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Copied To Clipboard !')));
                   },
                 );
               }),

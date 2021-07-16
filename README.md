@@ -27,6 +27,15 @@
 
    - Easily copy contact information with just a tap.
 
+   - Dark Mode For A Cool Look :sunglasses:
+
+   - Google Sign-In For Easy And Secure Login
+
+   - Fast NoSQL Database (Firebase Realtime Database)
+
+
+
+
 ## Advantages Of Using ShareTact Over Conventional Methods To Share Contacts
 
    - Determine Context Of Contacts With Group Titles:

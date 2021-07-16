@@ -19,13 +19,13 @@
 
 
 ## Features :
-### - Create various groups, add people to them.
+   - Create various groups, add people to them.
 
-### - Each group member can share contacts will all others
+   - Each group member can share contacts will all others
 
-### - If you add/remove contacts, changes visible to all the group members
+   - If you add/remove contacts, changes visible to all the group members
 
-### - Easily copy contact information with just a tap.
+   - Easily copy contact information with just a tap.
 
 ## Advantages Of Using ShareTact Over Conventional Methods To Share Contacts
 

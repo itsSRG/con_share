@@ -5,13 +5,14 @@
 
 ## ShareTact Is A Contact Sharing App. Create Groups With People, Share Contacts With Them !
 
-### Framework Used : Flutter
-### Programming Language : Dart
-### Database : Firebase Realtime Database (A NoSQL Database)
-### User Authentication : Google Sign - In
+## Technical Details:
+### - Framework Used : Flutter
+### - Programming Language : Dart
+### - Database : Firebase Realtime Database (A NoSQL Database)
+### - User Authentication : Google Sign - In
 
-### The app was designed to make contact sharing easier. Be it your family or your colleagues,
-### create context specific groups, and share them with all your group members !
+### > The app was designed to make contact sharing easier. Be it your family or your colleagues,
+### > create context specific groups, and share them with all your group members !
 
 ## Features :
 ### - Create various groups, add people to them.
